@@ -1,32 +1,56 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
-export default function Todo(props) {
-  const task = props.hmwrk;
+export default function Todo({
+  hmwrk,
+  remove,
+  startEditing,
+  editingTask,
+  editTask,
+  cancelEditing,
+}) {
   const [status, setStatus] = useState(false);
+  const [editText, setEditText] = useState(hmwrk.hmwrk);
 
-  function deleteTask() {
-    props.remove(task);
-  }
+  const handleCheckbox = () => {
+    setStatus(!status);
+  };
 
-  function handleCheckbox() {
-    if (status === false) {
-      setStatus(true);
-    } else {
-      setStatus(false);
-    }
-  }
+  const handleEdit = () => {
+    startEditing(hmwrk.id);
+  };  
+
+  const handleSaveEdit = () => {
+    editTask(hmwrk.id, editText);
+  };
+
+  const handleCancelEdit = () => {
+    cancelEditing();
+  };
+
+  const handleInputChange = (e) => {
+    setEditText(e.target.value);
+  };
 
   return (
     <div className="taskContainer">
       <div className="taskInfo">
-        <input type="checkbox" onChange={handleCheckbox} />
-        {status === false ? (
-          <p className="notDone">{task.hmwrk}</p>
+        <input type="checkbox" checked={status} onChange={handleCheckbox} />
+        {editingTask === hmwrk.id ? (
+          <div>
+            <input
+              type="text"
+              value={editText}
+              onChange={handleInputChange}
+            />
+            <button onClick={handleSaveEdit}>Save</button>
+            <button onClick={handleCancelEdit}>Cancel</button>
+          </div>
         ) : (
-          <p className="done">{task.hmwrk}</p>
+          <p className={status ? "done" : "notDone"}>{hmwrk.hmwrk}</p>
         )}
       </div>
-      <button onClick={deleteTask}>delete</button>
+      <button onClick={handleEdit}>Edit</button>
+      <button onClick={() => remove(hmwrk)}>Delete</button>
     </div>
   );
 }
