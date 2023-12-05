@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styles.css"
 
 export default function Todo({
   hmwrk,
@@ -17,7 +18,7 @@ export default function Todo({
 
   const handleEdit = () => {
     startEditing(hmwrk.id);
-  };  
+  };
 
   const handleSaveEdit = () => {
     editTask(hmwrk.id, editText);
@@ -31,26 +32,39 @@ export default function Todo({
     setEditText(e.target.value);
   };
 
+  const getTimeString = () => {
+    const options = { hour: "numeric", minute: "numeric" };
+    return new Date().toLocaleTimeString(undefined, options);
+  };
+
   return (
     <div className="taskContainer">
       <div className="taskInfo">
         <input type="checkbox" checked={status} onChange={handleCheckbox} />
         {editingTask === hmwrk.id ? (
-          <div>
+          <div className="editBox">
             <input
               type="text"
               value={editText}
               onChange={handleInputChange}
             />
-            <button onClick={handleSaveEdit}>Save</button>
-            <button onClick={handleCancelEdit}>Cancel</button>
+            <div className="editButtonsContainer">
+              <button onClick={handleSaveEdit} className="button">Save</button>
+              <button onClick={handleCancelEdit} className="button">Cancel</button>
+            </div>
           </div>
         ) : (
-          <p className={status ? "done" : "notDone"}>{hmwrk.hmwrk}</p>
+          <>
+            <p className={status ? "done" : "notDone"}>{hmwrk.hmwrk}</p>
+            {/* <p className="time">Time Added: {hmwrk.time}</p> */}
+            {/* {status && <p className="checkboxTime">Completed: {getTimeString()}</p>} */}
+          </>
         )}
       </div>
-      <button onClick={handleEdit}>Edit</button>
-      <button onClick={() => remove(hmwrk)}>Delete</button>
+      <div className="editDeleteContainer">
+        <button onClick={handleEdit} className="button">Edit</button>
+        <button onClick={() => remove(hmwrk)} className="button">Delete</button>
+      </div>
     </div>
   );
 }

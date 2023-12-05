@@ -15,15 +15,28 @@ export default function TodoForm({ addTask, editTask, editingTask }) {
     }
   }, [editingTask]);
 
+  function getCurrentTime() {
+    const currentDateTime = new Date();
+    const hours = currentDateTime.getHours();
+    const minutes = currentDateTime.getMinutes();
+    const formattedTime = `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
+    return formattedTime;
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
+    const newTask = {
+      hmwrk,
+      id: isEditing ? editingTask.id : nanoid(),
+      time: getCurrentTime(),
+    };
+
     if (isEditing) {
-      editTask(editingTask.id, hmwrk);
+      editTask(editingTask.id, newTask);
     } else {
-      const newToDo = { hmwrk, id: nanoid() };
-      addTask(newToDo);
+      addTask(newTask);
     }
-  
+
     setHmwrk("");
     setIsEditing(false);
   }
